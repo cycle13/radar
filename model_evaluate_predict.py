@@ -31,14 +31,16 @@ def predict_radar(model,now_radar_mat,which):
 	print("######model predict######")
 
 	track = now_radar_mat[which][:31, ::, ::, ::]
-	print 'exist track.shape',track.shape  #(31,100,100,1)
+	print 'exist track.shape',track.shape  #(31,500,500,1)
 	for j in range(30):#30 predict future frames elesun
 	    #track_fact = now_radar_mat[which][j:(31+j),::,::,::]#j*batchsize:(31+batch_size) old
-	    #track_fact = now_radar_mat[which][31+j:31+j+1,::,::,::]#[31+j:31+j+1,::,::,::]#030 mohu but high acc
-            #track_fact = now_radar_mat[which][31+j-5:31+j+1,::,::,::]#[31+j:31+j+1,::,::,::]#output2
+	    #track_fact = now_radar_mat[which][31+j:31+j+1,::,::,::]#output1+,seq,acc,notclear,notblack
+            #track_fact = now_radar_mat[which][31+j-2:31+j,::,::,::]#output ?,seq,acc,notclear,black
+            #track_fact = now_radar_mat[which][31+j-5:31+j+1,::,::,::]#output2
             #output3 37 39error,black ok,but real45 predict46 RAD_32529
-            #output4 RAD_32528 black ok,real 45 predict45
-            track_fact = now_radar_mat[which][31+j-5:31+j+1,::,::,::]#output4
+            #output4 RAD_32528 black ok,real 45 predict46
+            #track_fact = now_radar_mat[which][31+j-6:31+j,::,::,::]#output5 real41 to predict43
+            track_fact = now_radar_mat[which][31+j-4:31+j+2,::,::,::]#output6 seq,acc,clear,black 
             #new_pos = model.predict(track[np.newaxis, ::, ::, ::, ::])
 	    new_pos = model.predict(track_fact[np.newaxis, ::, ::, ::, ::])
 	    print 'model.predict.out_shape',new_pos.shape #(1,31,100,100,1)
